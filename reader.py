@@ -1,7 +1,7 @@
 import mpyq
 from s2protocol import versions
 import json
-
+import sys
 
 class Sc2Replay:
     def __init__(self, replay_path):
@@ -57,6 +57,6 @@ class Sc2Replay:
 
 
 if __name__ == '__main__':
-    rep = Sc2Replay('path/to/replay')
+    rep = Sc2Replay(sys.argv[1])
     productions = rep.parse_player_productions(True)
     print(productions)
