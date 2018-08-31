@@ -341,4 +341,8 @@ fs.readFile(process.argv[2], 'utf8', function (err, data) {
             }
         }
     }
+
+    fs.unlink(process.argv[2], () => {
+        console.log("Has delete Pastfile!");
+    })
 });
