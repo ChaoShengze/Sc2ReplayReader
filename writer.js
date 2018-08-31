@@ -254,6 +254,9 @@ var supply = {
 
 var supplyNum = 12;
 var supplyLimit = 15;
+var playerNum = 0;
+
+var fs = require("fs");
 
 function getSec(loop) {
     return loop / 1.4 / 16;
@@ -268,10 +271,34 @@ function setSupply(itemName) {
 }
 
 function writer(i, t, s) {
-    
+
+    playerNum += 1;
+    var str_i = fuseStr(i);
+    var str_t = fuseStr(t);
+    var str_s = fuseStr(s);
+
+    console.log(str_i, str_t, str_s);
+
+    var data = "<Tactics><Time>" + str_t + "</Time><Things>" + str_i + "</Things><Support>" + str_s + "</Support><About>此战术文件由在线解析自动生成，星际争霸II助手官网：https://sc2.east-unicorn.cn</About></Tactics>";
+    console.log(data);
+    fs.writeFile(process.argv[2].replace(".json", "Player_" + playerNum + ".xml"), data, (err) => {
+        if (err) {
+            return console.error(err);
+        }
+        console.log("Complete!");
+    });
 }
 
-var fs = require("fs");
+function fuseStr(ary) {
+    var strs = "";
+    for (var index = 0; index < ary.length; index++) {
+        var element = ary[index];
+        strs = strs + ("," + element.toString());
+    }
+    strs = strs.slice(1);
+    return strs;
+}
+
 fs.readFile(process.argv[2], 'utf8', function (err, data) {
     var json = JSON.parse(data);
     for (var key in json) {
@@ -310,7 +337,7 @@ fs.readFile(process.argv[2], 'utf8', function (err, data) {
                     }
                 }
 
-
+                writer(i, t, s);
             }
         }
     }
