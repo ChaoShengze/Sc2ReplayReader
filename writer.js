@@ -300,49 +300,55 @@ function fuseStr(ary) {
 }
 
 fs.readFile(process.argv[2], 'utf8', function (err, data) {
-    var json = JSON.parse(data);
-    for (var key in json) {
-        if (json.hasOwnProperty(key)) {
-            var e = json[key];
-            if (e.length > 0) {
-                var i = [];
-                var t = [];
-                var s = [];
-                var pastTime = 0;
+    try {
+        var json = JSON.parse(data);
+        for (var key in json) {
+            if (json.hasOwnProperty(key)) {
+                var e = json[key];
+                if (e.length > 0) {
+                    var i = [];
+                    var t = [];
+                    var s = [];
+                    var pastTime = 0;
 
-                if (e[0].name == "Drone") {
-                    supplyLimit = 14;
-                } else {
-                    supplyLimit = 15;
-                }
-                supplyNum = 12;
-
-                for (var index = 0; index < e.length; index++) {
-                    var element = e[index];
-                    if (items[element.name]) {
-
-                        i.push(items[element.name]);
-
-                        var nowTime = Math.round(getSec(element.loop));
-                        if (nowTime > pastTime) {
-                            t.push(nowTime);
-                            pastTime = nowTime;
-                        } else {
-                            t.push(pastTime + 1);
-                            pastTime += 1;
-                        }
-
-                        setSupply(element.name);
-                        s.push(supplyNum.toString() + "/" + supplyLimit.toString());
+                    if (e[0].name == "Drone") {
+                        supplyLimit = 14;
+                    } else {
+                        supplyLimit = 15;
                     }
-                }
+                    supplyNum = 12;
 
-                writer(i, t, s);
+                    for (var index = 0; index < e.length; index++) {
+                        var element = e[index];
+                        if (items[element.name]) {
+
+                            i.push(items[element.name]);
+
+                            var nowTime = Math.round(getSec(element.loop));
+                            if (nowTime > pastTime) {
+                                t.push(nowTime);
+                                pastTime = nowTime;
+                            } else {
+                                t.push(pastTime + 1);
+                                pastTime += 1;
+                            }
+
+                            setSupply(element.name);
+                            s.push(supplyNum.toString() + "/" + supplyLimit.toString());
+                        }
+                    }
+
+                    writer(i, t, s);
+                }
             }
         }
-    }
 
-    fs.unlink(process.argv[2], () => {
-        console.log("Has delete Pastfile!");
-    })
+        fs.unlink(process.argv[2], () => {
+            console.log("Has delete Pastfile!");
+        })
+    } catch (error) {
+        fs.unlink(process.argv[2], () => {
+            console.log("Has delete Pastfile!");
+        })
+    }
 });
