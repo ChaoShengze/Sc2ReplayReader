@@ -59,4 +59,7 @@ class Sc2Replay:
 if __name__ == '__main__':
     rep = Sc2Replay(sys.argv[1])
     productions = rep.parse_player_productions(True)
-    print(productions)
+    filename = sys.argv[1].replace(".SC2Replay","") + ".json"
+    file = open(filename,"w")
+    file.write(productions)
+    file.close()
